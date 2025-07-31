@@ -58,19 +58,25 @@ def extraire_stats(commentaires):
     lignes_valides = 0
     for ligne in commentaires.strip().split("\n"):
         ligne = ligne.strip()
-        if not ligne or ":" not in ligne:
+        if not ligne:
             continue
-        nom, contenu = ligne.split(":", 1)
-        contenu = contenu.lower()
 
-        # NLP simple pour attraper des phrases floues
-        buts = re.search(r"(\d+)\s*(but|buts|goals?)", contenu)
-        passes = re.search(r"(\d+)\s*(pass|passes|assists?)", contenu)
+        # Essaye de séparer le nom du reste même sans ":"
+        match_nom_stats = re.match(r"^(.*?)(\d+\s*(but|buts|goal|goals|pass|passes|assist|assists))", ligne, re.IGNORECASE)
+        if not match_nom_stats:
+            continue
+
+        contenu = ligne.lower()
+        nom = ligne.split(" ")[0] + " " + ligne.split(" ")[1] if len(ligne.split()) > 1 else ligne.split(" ")[0]
+
+        buts = re.search(r"(\d+)\s*(but|buts|goal|goals)\b", contenu)
+        passes = re.search(r"(\d+)\s*(pass|passes|assist|assists)\b", contenu)
+
         if not buts and "but" in contenu:
             buts = re.search(r"(un|une)\s*but", contenu)
             if buts: buts = [None, "1"]
         if not passes and "pass" in contenu:
-            passes = re.search(r"(une|un|1)\s*pass", contenu)
+            passes = re.search(r"(un|une|1)\s*pass", contenu)
             if passes: passes = [None, "1"]
 
         if not buts and not passes:
@@ -98,7 +104,7 @@ def index():
         stats = extraire_stats(commentaires)
 
         if stats is None:
-            error = "Aucune statistique détectée dans les commentaires. Assurez-vous qu'ils sont bien formatés."
+            error = "Aucune statistique détectée dans les commentaires. Assurez-vous qu'ils sont bien formatés (ex: Jean Dupont 2 buts 1 passe)."
         else:
             for joueur, s in stats.items():
                 cumulative_stats[joueur]['buts'] += s['buts']
