@@ -22,6 +22,7 @@ HTML_TEMPLATE = """
     th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
     th { background-color: #004080; color: white; }
     tr:nth-child(even) { background-color: #eef3f7; }
+    .error { color: red; font-weight: bold; margin-top: 20px; text-align: center; }
   </style>
 </head>
 <body>
@@ -30,7 +31,10 @@ HTML_TEMPLATE = """
     <textarea name="commentaires">{{ commentaires }}</textarea><br>
     <button type="submit">Analyser</button>
   </form>
-  {% if stats %}
+  {% if error %}
+    <div class="error">{{ error }}</div>
+  {% endif %}
+  {% if stats and not error %}
   <h2>Statistiques cumulatives</h2>
   <table>
     <tr><th>Nom</th><th>Buts</th><th>Passes</th></tr>
@@ -49,12 +53,41 @@ HTML_TEMPLATE = """
 </html>
 """
 
+def extraire_stats(commentaires):
+    stats = defaultdict(lambda: {'buts': 0, 'passes': 0})
+    lignes_valides = 0
+    for ligne in commentaires.strip().split("\n"):
+        ligne = ligne.strip()
+        if not ligne or ":" not in ligne:
+            continue
+        nom, contenu = ligne.split(":", 1)
+        contenu = contenu.lower()
+
+        # NLP simple pour attraper des phrases floues
+        buts = re.search(r"(\d+)\s*(but|buts|goals?)", contenu)
+        passes = re.search(r"(\d+)\s*(pass|passes|assists?)", contenu)
+        if not buts and "but" in contenu:
+            buts = re.search(r"(un|une)\s*but", contenu)
+            if buts: buts = [None, "1"]
+        if not passes and "pass" in contenu:
+            passes = re.search(r"(une|un|1)\s*pass", contenu)
+            if passes: passes = [None, "1"]
+
+        if not buts and not passes:
+            continue
+
+        lignes_valides += 1
+        stats[nom.strip()]["buts"] += int(buts[1]) if buts else 0
+        stats[nom.strip()]["passes"] += int(passes[1]) if passes else 0
+
+    return stats if lignes_valides > 0 else None
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     commentaires = ""
-    stats = defaultdict(lambda: {'buts': 0, 'passes': 0})
     cumulative_file = "stats_cumulatives.json"
     cumulative_stats = defaultdict(lambda: {'buts': 0, 'passes': 0})
+    error = None
 
     if os.path.exists(cumulative_file):
         with open(cumulative_file, "r", encoding="utf-8") as f:
@@ -62,26 +95,21 @@ def index():
 
     if request.method == "POST":
         commentaires = request.form["commentaires"]
-        for ligne in commentaires.strip().split("\n"):
-            if ":" not in ligne:
-                continue
-            nom, contenu = ligne.split(":", 1)
-            buts = re.search(r"(\d+)\s*but", contenu)
-            passes = re.search(r"(\d+)\s*pass", contenu)
-            stats[nom.strip()]["buts"] = int(buts.group(1)) if buts else 0
-            stats[nom.strip()]["passes"] = int(passes.group(1)) if passes else 0
+        stats = extraire_stats(commentaires)
 
-        for joueur, s in stats.items():
-            cumulative_stats[joueur]['buts'] += s['buts']
-            cumulative_stats[joueur]['passes'] += s['passes']
-
-        with open(cumulative_file, "w", encoding="utf-8") as f:
-            json.dump(cumulative_stats, f, ensure_ascii=False, indent=2)
+        if stats is None:
+            error = "Aucune statistique détectée dans les commentaires. Assurez-vous qu'ils sont bien formatés."
+        else:
+            for joueur, s in stats.items():
+                cumulative_stats[joueur]['buts'] += s['buts']
+                cumulative_stats[joueur]['passes'] += s['passes']
+            with open(cumulative_file, "w", encoding="utf-8") as f:
+                json.dump(cumulative_stats, f, ensure_ascii=False, indent=2)
 
     classement = sorted(cumulative_stats.items(), key=lambda x: (-x[1]['buts'], -x[1]['passes']))
     top_buteurs = classement[:3]
 
-    return render_template_string(HTML_TEMPLATE, commentaires=commentaires, stats=cumulative_stats, classement=classement, top_buteurs=top_buteurs)
+    return render_template_string(HTML_TEMPLATE, commentaires=commentaires, stats=cumulative_stats if not error else None, classement=classement, top_buteurs=top_buteurs, error=error)
 
 if __name__ == "__main__":
     import os
