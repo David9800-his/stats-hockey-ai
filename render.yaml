@@ -1,9 +1,10 @@
 services:
   - type: web
     name: stats-hockey
-    runtime: python
+    env: python
     buildCommand: ""
-    startCommand: python app.py
+    startCommand: "python agent_stats_hockey.py"
     envVars:
-      - key: FLASK_ENV
-        value: production
+      - key: PYTHON_VERSION
+        value: 3.11
+    autoDeploy: true

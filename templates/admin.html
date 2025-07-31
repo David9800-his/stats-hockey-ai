@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | Stats Hockey</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Interface Administrateur</h1>
+    {% if not session.logged_in %}
+      <form method="post">
+        <input type="password" name="password" placeholder="Mot de passe">
+        <button type="submit">Connexion</button>
+        {% if error %}<p class="error">{{ error }}</p>{% endif %}
+      </form>
+    {% else %}
+      <form method="post">
+        <label for="date">Date de match :</label>
+        <select name="date">{% for d in dates %}<option value="{{ d }}" {% if d==selected_date %}selected{% endif %}>{{ d }}</option>{% endfor %}</select>
+        <textarea name="commentaires" rows="10" placeholder="Coller les commentaires ici">{{ commentaires }}</textarea>
+        <button type="submit">Analyser et Enregistrer</button>
+        <button name="reset" value="1">Réinitialiser toutes les stats</button>
+        <a href="/logout">Se déconnecter</a>
+      </form>
+      {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% endif %}
+  </div>
+</body>
+</html>

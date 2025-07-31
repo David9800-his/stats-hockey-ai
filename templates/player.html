@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Stats Joueurs | Hockey</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Classement cumulatif</h1>
+    <table><tr><th>Joueur</th><th>Buts</th><th>Passes</th></tr>
+    {% for j, s in classement %}<tr><td>{{ j }}</td><td>{{ s.buts }}</td><td>{{ s.passes }}</td></tr>{% endfor %}</table>
+
+    <h2>Top 3 Buteurs</h2><ul>{% for j, s in top_buteurs %}<li>{{ j }} - {{ s.buts }} buts</li>{% endfor %}</ul>
+    <h2>Top 3 Passeurs</h2><ul>{% for j, s in top_passeurs %}<li>{{ j }} - {{ s.passes }} passes</li>{% endfor %}</ul>
+    <h2>Top 3 Points</h2><ul>{% for j, s in top_points %}<li>{{ j }} - {{ s.buts + s.passes }} points</li>{% endfor %}</ul>
+    <a href="/historique">Voir historique</a>
+  </div>
+</body>
+</html>
