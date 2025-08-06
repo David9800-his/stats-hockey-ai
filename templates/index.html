@@ -1,70 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Les Plombiers - Hockey Stats</title>
     <style>
         body {
-            background-color: #c0c0c0;
-            font-family: "Courier New", Courier, monospace;
-            color: #000080;
             margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
         }
         header {
-            background-color: #000080;
+            background-color: #1e3a8a;
             color: white;
-            padding: 10px;
+            padding: 1rem;
             text-align: center;
-            border-bottom: 4px double #ffffff;
         }
         nav {
-            background-color: #808080;
-            padding: 10px;
-            border-bottom: 2px solid #000080;
+            display: flex;
+            justify-content: center;
+            background-color: #3b82f6;
+            flex-wrap: wrap;
         }
         nav a {
             color: white;
             text-decoration: none;
-            margin-right: 15px;
+            padding: 1rem;
             font-weight: bold;
         }
-        .carousel {
-            margin: 20px auto;
-            width: 80%;
-            background-color: #ffffff;
-            border: 2px dashed #000080;
-            padding: 10px;
+        .hero {
+            padding: 2rem;
             text-align: center;
+            background-color: #e0f2fe;
         }
-        .content {
-            padding: 20px;
+        .carousel {
+            margin: 2rem auto;
+            max-width: 600px;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
         footer {
-            background-color: #000080;
+            background-color: #1e3a8a;
             color: white;
             text-align: center;
-            padding: 10px;
-            border-top: 4px double #ffffff;
-            position: fixed;
+            padding: 1rem;
+            position: relative;
             bottom: 0;
             width: 100%;
         }
         .login {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 1rem;
+            right: 1rem;
         }
         .login a {
             color: white;
             text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            nav a {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Les Plombiers</h1>
-        <p>Retro Hockey Stats Portal - Est. 1994</p>
+        <p>Modern Hockey Stats Portal</p>
         <div class="login"><a href="/auth/login">Admin Login</a></div>
     </header>
     <nav>
@@ -74,14 +82,13 @@
         <a href="/news">News</a>
         <a href="/export">Export CSV</a>
     </nav>
-    <div class="carousel">
-        <h2>Player Carousel</h2>
-        <p>[Dynamic player profiles will appear here]</p>
-    </div>
-    <div class="content">
+    <div class="hero">
         <h2>Welcome to Les Plombiers!</h2>
-        <p>Relive the glory days of slapshots, mullets, and Zambonis. Track your favorite players' stats and explore vintage hockey culture.</p>
-        <p>Powered by Flask. Styled like it's 1994.</p>
+        <p>Track your favorite players, view match history, and explore hockey stats with a modern interface.</p>
+    </div>
+    <div class="carousel">
+        <h3>Player Carousel</h3>
+        <p>[Dynamic player profiles will appear here]</p>
     </div>
     <footer>
         &copy; 2025 Les Plombiers. All rights reserved.
