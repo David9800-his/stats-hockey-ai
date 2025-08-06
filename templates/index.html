@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Les Plombiers - Hockey Stats</title>
+    <style>
+        body {
+            background-color: #c0c0c0;
+            font-family: "Courier New", Courier, monospace;
+            color: #000080;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #000080;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 4px double #ffffff;
+        }
+        nav {
+            background-color: #808080;
+            padding: 10px;
+            border-bottom: 2px solid #000080;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .carousel {
+            margin: 20px auto;
+            width: 80%;
+            background-color: #ffffff;
+            border: 2px dashed #000080;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        footer {
+            background-color: #000080;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-top: 4px double #ffffff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .login {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .login a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Les Plombiers</h1>
+        <p>Retro Hockey Stats Portal - Est. 1994</p>
+        <div class="login"><a href="/auth/login">Admin Login</a></div>
+    </header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/players">Players</a>
+        <a href="/matches">Match History</a>
+        <a href="/news">News</a>
+        <a href="/export">Export CSV</a>
+    </nav>
+    <div class="carousel">
+        <h2>Player Carousel</h2>
+        <p>[Dynamic player profiles will appear here]</p>
+    </div>
+    <div class="content">
+        <h2>Welcome to Les Plombiers!</h2>
+        <p>Relive the glory days of slapshots, mullets, and Zambonis. Track your favorite players' stats and explore vintage hockey culture.</p>
+        <p>Powered by Flask. Styled like it's 1994.</p>
+    </div>
+    <footer>
+        &copy; 2025 Les Plombiers. All rights reserved.
+    </footer>
+</body>
+</html>
